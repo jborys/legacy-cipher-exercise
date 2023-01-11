@@ -1,11 +1,10 @@
 package com.oa.selfservice.web.domain.encrypt;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.apache.commons.codec.binary.Base64;
 
-import com.oa.selfservice.web.ui.I18NConstants;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 
 public class EncryptDiscountCode {
 
@@ -18,7 +17,7 @@ public class EncryptDiscountCode {
             return code;
         }
         String result = "";
-        byte[] input = code.getBytes(I18NConstants.UTF8);
+        byte[] input = code.getBytes(StandardCharsets.UTF_8);
 
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS7Padding", "BC");
         cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -29,7 +28,7 @@ public class EncryptDiscountCode {
         cipher.doFinal(cipherText, ctLength);
         result = new String(Base64.encodeBase64(cipherText));
 
-        result = java.net.URLEncoder.encode(result, "UTF-8");
+        result = java.net.URLEncoder.encode(result, StandardCharsets.UTF_8);
         result = "_!_" + result;
 
         return result;

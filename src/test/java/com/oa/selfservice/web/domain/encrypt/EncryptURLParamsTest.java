@@ -1,11 +1,11 @@
 package com.oa.selfservice.web.domain.encrypt;
 
-import com.oa.selfservice.web.ui.I18NConstants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,13 +23,13 @@ public class EncryptURLParamsTest {
     @Test
     public void encryptedParametersShouldMatchExpectedValues() throws Exception {
         String encryptedResult = EncryptURLParams.encrypt(textParameters, carrierCode);
-        String encodedResult = URLEncoder.encode(encryptedResult, I18NConstants.UTF8);
+        String encodedResult = URLEncoder.encode(encryptedResult, StandardCharsets.UTF_8);
         assertThat(encodedResult).isEqualTo(encodedParameters);
     }
 
     @Test
     public void decryptedParametersShouldMatchExpectedValues() throws Exception {
-        String decodedResult = URLDecoder.decode(encodedParameters, I18NConstants.UTF8);
+        String decodedResult = URLDecoder.decode(encodedParameters, StandardCharsets.UTF_8);
     	String decryptedResult = EncryptURLParams.decrypt(decodedResult, carrierCode);
         assertThat(decryptedResult).isEqualTo(textParameters);
     }

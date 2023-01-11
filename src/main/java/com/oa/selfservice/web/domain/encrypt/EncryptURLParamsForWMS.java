@@ -1,13 +1,11 @@
 package com.oa.selfservice.web.domain.encrypt;
 
-import java.security.Security;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
-
-import com.oa.selfservice.web.ui.I18NConstants;
+import java.nio.charset.StandardCharsets;
+import java.security.Security;
 
 public class EncryptURLParamsForWMS {
 
@@ -21,7 +19,7 @@ public class EncryptURLParamsForWMS {
 	public static String encrypt(String code) throws Exception {
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-		byte[] input = code.getBytes(I18NConstants.UTF8);
+		byte[] input = code.getBytes(StandardCharsets.UTF_8);
 
 		Cipher cipher = Cipher.getInstance("AES/ECB/ZeroBytePadding", "BC");
 		cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -30,7 +28,7 @@ public class EncryptURLParamsForWMS {
 		cipher.doFinal(cipherText, ctLength);
 
 		String result = new String(Base64.encodeBase64(cipherText));
-		result = java.net.URLEncoder.encode(result, "UTF-8");
+		result = java.net.URLEncoder.encode(result, StandardCharsets.UTF_8);
 
 		return result;
 	}
@@ -43,7 +41,7 @@ public class EncryptURLParamsForWMS {
 		cipher.init(Cipher.DECRYPT_MODE, key);
 		byte[] utf8 = cipher.doFinal(input);
 
-		String result = new String(utf8, I18NConstants.UTF8);
+		String result = new String(utf8, StandardCharsets.UTF_8);
 
 		return result;
 	}

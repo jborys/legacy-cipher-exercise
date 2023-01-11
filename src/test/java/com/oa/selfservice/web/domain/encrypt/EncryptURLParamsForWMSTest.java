@@ -1,10 +1,10 @@
 package com.oa.selfservice.web.domain.encrypt;
 
-import com.oa.selfservice.web.ui.I18NConstants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +27,7 @@ public class EncryptURLParamsForWMSTest {
 	
 	@Test
 	public void decryptedParametersShouldMatchExpectedValues() throws Exception {
-		String decodedResult = URLDecoder.decode(encryptedString, I18NConstants.UTF8);
+		String decodedResult = URLDecoder.decode(encryptedString, StandardCharsets.UTF_8);
 		String decryptedResult = EncryptURLParamsForWMS.decrypt(decodedResult);
 		assertThat(decryptedResult).isEqualTo(linkParameters);
 	}
@@ -36,7 +36,7 @@ public class EncryptURLParamsForWMSTest {
     public void encryptedParametersShouldDecryptToOriginalParameters() throws Exception {
     	String plainText = String.valueOf(System.currentTimeMillis());
     	String encryptedResult = EncryptURLParamsForWMS.encrypt(plainText);
-    	String decodedResult = URLDecoder.decode(encryptedResult, I18NConstants.UTF8);
+    	String decodedResult = URLDecoder.decode(encryptedResult, StandardCharsets.UTF_8);
     	String decryptedResult = EncryptURLParamsForWMS.decrypt(decodedResult);
 		assertThat(decryptedResult).isEqualTo(plainText);
     }

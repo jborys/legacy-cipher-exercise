@@ -1,6 +1,17 @@
 package com.oa.selfservice.web.domain.encrypt;
 
-import java.io.UnsupportedEncodingException;
+import com.oa.selfservice.web.domain.exception.CryptoException;
+import com.oa.selfservice.web.util.OAComConstants;
+import com.oa.selfservice.web.util.ResourceUtil;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.crypto.*;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -9,24 +20,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.oa.selfservice.web.domain.exception.CryptoException;
-import com.oa.selfservice.web.ui.I18NConstants;
-import com.oa.selfservice.web.util.OAComConstants;
-import com.oa.selfservice.web.util.ResourceUtil;
 
 /**
  * 
@@ -99,7 +92,7 @@ public class EncryptURLParams {
 
 		try {
 			// Encode the string into bytes using utf-8
-			byte[] utf8 = plainText.getBytes(I18NConstants.UTF8);
+			byte[] utf8 = plainText.getBytes(StandardCharsets.UTF_8);
 
 			// Encrypt
 			ecipher = ecipherMap.get(carrierCode);
@@ -119,9 +112,6 @@ public class EncryptURLParams {
 		} catch (IllegalBlockSizeException e) {
 				logger.error("IllegalBlockSizeException in EncryptURLParams for Request: "+ e);
 			throw new CryptoException("IllegalBlockSizeException in EncryptURLParams for Request: ",e);
-		} catch (UnsupportedEncodingException e) {
-				logger.error("UnsupportedEncodingException in EncryptURLParams for Request: "+ e);
-			throw new CryptoException("UnsupportedEncodingException in EncryptURLParams for Request: ",	e);
 		}
 		return retval;
 	}
@@ -155,7 +145,7 @@ public class EncryptURLParams {
 			byte[] utf8 = dcipher.doFinal(dec);
 
 			// Decode using utf-8
-			retval =  new String(utf8, I18NConstants.UTF8);
+			retval =  new String(utf8, StandardCharsets.UTF_8);
 
 		} catch (BadPaddingException e) {
 				logger.error("BadPaddingException in EncryptURLParams for Request: "+ e);
@@ -163,11 +153,8 @@ public class EncryptURLParams {
 		} catch (IllegalBlockSizeException e) {
 				logger.error("IllegalBlockSizeException in EncryptURLParams for Request: "+ e);
 			throw new CryptoException("IllegalBlockSizeException in EncryptURLParams for Request: ",e);
-		} catch (UnsupportedEncodingException e) {
-				logger.error("UnsupportedEncodingException in EncryptURLParams for Request: "+ e);
-			throw new CryptoException("UnsupportedEncodingException in EncryptURLParams for Request: ",	e);
 		}
-		
+
 		return retval;
 	}
 	
